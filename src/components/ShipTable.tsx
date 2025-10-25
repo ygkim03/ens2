@@ -282,6 +282,12 @@ export const ShipTable = ({ data }: ShipTableProps) => {
                           <span className="font-medium">{(ship as any).rmkAgent}</span>
                         </div>
                       )}
+                      {(ship as any).rmk && (
+                        <div className="sm:col-span-2">
+                          <span className="text-muted-foreground">RMK:</span>{" "}
+                          <span className="font-medium">{(ship as any).rmk}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
