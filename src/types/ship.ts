@@ -22,4 +22,5 @@ export interface ShipSchedule {
   rmkAgent?: string;
   isSpecial: boolean;
   pt: string;
+  rmk: string;
 }
