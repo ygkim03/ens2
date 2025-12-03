@@ -148,7 +148,7 @@ const Index = () => {
             <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
               <p>
                 <span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명) : 
-                <span className="leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}
+                <span className="text-[10px] leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}
                    </span>
               </p>
               <p>
