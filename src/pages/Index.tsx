@@ -157,10 +157,10 @@ const Index = () => {
             </div>
             <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
               <p>
-                <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+                <span className="font-semibold text-primary">이엔에스</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
               </p>
               <p>
-                <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+                <span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
               </p>
             </CollapsibleContent>
           </Collapsible>
