@@ -111,14 +111,14 @@ const Index = () => {
         <p className="mt-1 text-base text-muted-foreground">부산신항 실시간 스케줄</p>
         {workerData && (
           <div className="mt-2 text-xs text-muted-foreground space-y-0.5">
-            <p className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</p>
-            <p>
-              <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
-            </p>
-            <p>
-              <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
-            </p>
-          </div>
+  <p className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</p>
+  <p>
+    <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+  </p>
+  <p>
+    <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+  </p>
+</div>
         )}
       </div>
     </div>
