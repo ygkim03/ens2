@@ -132,7 +132,9 @@ const Index = () => {
         </div>
 
       </div>
-              {workerData && (
+
+    </div>
+                  {workerData && (
           <Collapsible className="mt-2">
             <div className="flex items-center gap-2 text-xs">
               <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
@@ -153,7 +155,6 @@ const Index = () => {
             </CollapsibleContent>
           </Collapsible>
         )}
-    </div>
   </div>
 </header>
 
