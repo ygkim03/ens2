@@ -98,23 +98,33 @@ const Index = () => {
       {/* Header */}
 <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
   <div className="container mx-auto px-4 py-5 relative">
-    <div className="flex items-start gap-3">
-      {/* 아이콘 + 타이틀 */}
-      <div className="relative">
-        <Ship className="h-8 w-8 text-primary" />
-        <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
-      </div>
-      <div>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          이엔에스마린 도선 모니터링
-        </h1>
-        <p className="mt-1 text-base text-muted-foreground">부산신항 실시간 스케줄</p>
-      </div>
+    {/* 전체 컨테이너 */}
+<div>
 
-       {/* 근무자 명단: 더 왼쪽으로 붙임 */}
+  {/* 1. 아이콘 + 타이틀 + 부산신항 */}
+  <div className="flex items-start gap-3 mb-1">
+    {/* 아이콘 */}
+    <div className="relative">
+      <Ship className="h-8 w-8 text-primary" />
+      <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
+    </div>
+
+    {/* 텍스트 그룹 */}
+    <div>
+      <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        이엔에스마린 도선 모니터링
+      </h1>
+      <p className="mt-1 text-base text-muted-foreground">
+        부산신항 실시간 스케줄
+      </p>
+    </div>
+  </div>
+
+  {/* 2. 근무자 명단 — 제목보다 더 왼쪽으로 이동 */}
   {workerData && (
-    <div className="mt-2 text-[10px] text-muted-foreground space-y-0.5 text-left -ml-2">
-      {/* 날짜 줄 */}
+    <div className="mt-1 text-[10px] text-muted-foreground space-y-0.5 text-left -ml-3">
+
+      {/* 날짜 + 요일 */}
       <p className="font-medium text-foreground text-[11px]">
         {workerData.date} ({workerData.weekday})
       </p>
@@ -123,24 +133,20 @@ const Index = () => {
       <p className="leading-tight">
         <span className="font-semibold text-primary">이엔에스마린</span>
         ({workerData.ensCount}명):
-        <span className="ml-1">
-          {workerData.ensWorkers.map(w => w.name).join(', ')}
-        </span>
+        <span className="ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span>
       </p>
 
       {/* WEST */}
       <p className="leading-tight">
         <span className="font-semibold text-accent">웨스턴마린</span>
         ({workerData.westCount}명):
-        <span className="ml-1">
-          {workerData.westWorkers.map(w => w.name).join(', ')}
-        </span>
+        <span className="ml-1">{workerData.westWorkers.map(w => w.name).join(', ')}</span>
       </p>
     </div>
   )}
 
-      
-    </div>
+</div>
+
 
     {/* 버튼 박스: 오른쪽 하단 고정 */}
     <div className="absolute bottom-2 right-2 flex gap-1">
