@@ -135,17 +135,17 @@ const Index = () => {
 
     </div>
                   {workerData && (
-          <Collapsible className="mt-0">
+          <Collapsible className="mt-2">
             <div className="flex items-center gap-2 text-xs">
               <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
-                  오늘 근무자명단
+                  오늘 근무자
                   <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
                 </Button>
               </CollapsibleTrigger>
             </div>
-            <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0">
+            <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
               <p>
                 <span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명) : 
                 <span className="text-[11px] leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}
