@@ -109,29 +109,37 @@ const Index = () => {
           이엔에스마린 도선 모니터링
         </h1>
         <p className="mt-1 text-base text-muted-foreground">부산신항 실시간 스케줄</p>
-        {workerData && (
-          <div 
-  className="mt-2 text-[10px] text-muted-foreground space-y-0.5 pl-1 text-left"
->
-  <p className="font-medium text-foreground text-[11px]">
-    {workerData.date} ({workerData.weekday})
-  </p>
-
-  <p className="leading-tight">
-    <span className="font-semibold text-primary">이엔에스마린</span> 
-    ({workerData.ensCount}명) :
-    <span className="ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span>
-  </p>
-
-  <p className="leading-tight">
-    <span className="font-semibold text-accent">웨스턴마린</span> 
-    ({workerData.westCount}명) :
-    <span className="ml-1">{workerData.westWorkers.map(w => w.name).join(', ')}</span>
-  </p>
-</div>
-
-        )}
       </div>
+
+       {/* 근무자 명단: 더 왼쪽으로 붙임 */}
+  {workerData && (
+    <div className="mt-2 text-[10px] text-muted-foreground space-y-0.5 text-left -ml-2">
+      {/* 날짜 줄 */}
+      <p className="font-medium text-foreground text-[11px]">
+        {workerData.date} ({workerData.weekday})
+      </p>
+
+      {/* ENS */}
+      <p className="leading-tight">
+        <span className="font-semibold text-primary">이엔에스마린</span>
+        ({workerData.ensCount}명):
+        <span className="ml-1">
+          {workerData.ensWorkers.map(w => w.name).join(', ')}
+        </span>
+      </p>
+
+      {/* WEST */}
+      <p className="leading-tight">
+        <span className="font-semibold text-accent">웨스턴마린</span>
+        ({workerData.westCount}명):
+        <span className="ml-1">
+          {workerData.westWorkers.map(w => w.name).join(', ')}
+        </span>
+      </p>
+    </div>
+  )}
+
+      
     </div>
 
     {/* 버튼 박스: 오른쪽 하단 고정 */}
