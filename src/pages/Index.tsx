@@ -1,10 +1,11 @@
 import { ShipTable } from "@/components/ShipTable";
 import { Ship, Waves, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
-import { ShipSchedule } from "@/types/ship";
+import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
 
 const API_URL = "https://yellow-truth-54a3.rladudrnr03.workers.dev/";
+const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbx5DMnZQDDeqHFA5vRvKC-XvmXbN7mxBsx5O2S_uET9RikN0CM_tIumFg3Ht5PBbHwgpQ/exec";
 
 const TERMINAL_BUTTONS = [
   { name: "PNIT", url: "https://www.pnitl.com/infoservice/vessel/vslScheduleChart.jsp" },
@@ -20,6 +21,19 @@ const TERMINAL_BUTTONS = [
 const Index = () => {
   const [shipData, setShipData] = useState<ShipSchedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [workerData, setWorkerData] = useState<WorkerData | null>(null);
+
+  const fetchWorkerData = async () => {
+    try {
+      const response = await fetch(WORKER_API_URL);
+      if (!response.ok) throw new Error('Failed to fetch worker data');
+      const data = await response.json();
+      setWorkerData(data);
+    } catch (error) {
+      console.error("Failed to fetch worker data:", error);
+    }
+  };
 
   const fetchShipData = async () => {
     setIsLoading(true);
@@ -76,6 +90,7 @@ const Index = () => {
 
   useEffect(() => {
     fetchShipData();
+    fetchWorkerData();
   }, []);
 
   return (
@@ -94,6 +109,17 @@ const Index = () => {
           이엔에스마린 도선 모니터링
         </h1>
         <p className="mt-1 text-base text-muted-foreground">부산신항 실시간 스케줄</p>
+        {workerData && (
+          <div className="mt-2 text-xs text-muted-foreground space-y-0.5">
+            <p className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</p>
+            <p>
+              <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+            </p>
+            <p>
+              <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+            </p>
+          </div>
+        )}
       </div>
     </div>
 
