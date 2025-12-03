@@ -166,7 +166,7 @@ const Index = () => {
           </Collapsible>
   )}
 
-</div>
+
 
 
   </div>
