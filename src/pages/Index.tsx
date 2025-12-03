@@ -22,7 +22,6 @@ const TERMINAL_BUTTONS = [
 const Index = () => {
   const [shipData, setShipData] = useState<ShipSchedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const [workerData, setWorkerData] = useState<WorkerData | null>(null);
 
   const fetchWorkerData = async () => {
@@ -99,18 +98,12 @@ const Index = () => {
       {/* Header */}
 <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
   <div className="container mx-auto px-4 py-5">
-    {/* 전체 컨테이너 */}
-<div>
-
-  {/* 1. 아이콘 + 타이틀 + 부산신항 */}
-  <div className="flex items-start gap-3 mb-1">
-    {/* 아이콘 */}
-    <div className="relative">
-      <Ship className="h-8 w-8 text-primary" />
-      <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
-    </div>
-
-    {/* 텍스트 그룹 */}
+    <div className="flex items-start gap-3">
+      {/* 아이콘 + 타이틀 */}
+      <div className="relative">
+        <Ship className="h-8 w-8 text-primary" />
+        <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
+      </div>
       <div className="flex-1">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           이엔에스마린 도선 모니터링
@@ -137,19 +130,12 @@ const Index = () => {
             </Button>
           </div>
         </div>
-
-
-
-    
-  </div>
-
-  {/* 2. 근무자 명단 — 제목보다 더 왼쪽으로 이동 */}
-  {workerData && (
+        {workerData && (
           <Collapsible className="mt-2">
             <div className="flex items-center gap-2 text-xs">
               <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground md:hover:text-foreground">
+                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
                   오늘 근무자명단
                   <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
                 </Button>
@@ -157,18 +143,16 @@ const Index = () => {
             </div>
             <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
               <p>
-                <span className="font-semibold text-primary">이엔에스</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+                <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
               </p>
               <p>
-                <span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+                <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
               </p>
             </CollapsibleContent>
           </Collapsible>
-  )}
-
-
-
-
+        )}
+      </div>
+    </div>
   </div>
 </header>
 
