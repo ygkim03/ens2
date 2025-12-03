@@ -1,8 +1,9 @@
 import { ShipTable } from "@/components/ShipTable";
-import { Ship, Waves, RefreshCw } from "lucide-react";
+import { Ship, Waves, RefreshCw, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const API_URL = "https://yellow-truth-54a3.rladudrnr03.workers.dev/";
 const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbx5DMnZQDDeqHFA5vRvKC-XvmXbN7mxBsx5O2S_uET9RikN0CM_tIumFg3Ht5PBbHwgpQ/exec";
@@ -122,27 +123,25 @@ const Index = () => {
 
   {/* 2. 근무자 명단 — 제목보다 더 왼쪽으로 이동 */}
   {workerData && (
-    <div className="mt-1 text-[10px] text-muted-foreground space-y-0.5 text-left -ml-3">
-
-      {/* 날짜 + 요일 */}
-      <p className="font-medium text-foreground text-[11px]">
-        {workerData.date} ({workerData.weekday})
-      </p>
-
-      {/* ENS */}
-      <p className="leading-tight">
-        <span className="font-semibold text-primary">이엔에스마린</span>
-        ({workerData.ensCount}명):
-        <span className="ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span>
-      </p>
-
-      {/* WEST */}
-      <p className="leading-tight">
-        <span className="font-semibold text-accent">웨스턴마린</span>
-        ({workerData.westCount}명):
-        <span className="ml-1">{workerData.westWorkers.map(w => w.name).join(', ')}</span>
-      </p>
-    </div>
+          <Collapsible className="mt-2">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
+                  오늘 근무자명단
+                  <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
+              <p>
+                <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+              </p>
+              <p>
+                <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+              </p>
+            </CollapsibleContent>
+          </Collapsible>
   )}
 
 </div>
