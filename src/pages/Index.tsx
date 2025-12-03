@@ -135,7 +135,7 @@ const Index = () => {
             <div className="flex items-center gap-2 text-xs">
               <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground md:hover:text-foreground">
                   오늘 근무자명단
                   <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
                 </Button>
