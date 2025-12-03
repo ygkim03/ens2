@@ -110,15 +110,26 @@ const Index = () => {
         </h1>
         <p className="mt-1 text-base text-muted-foreground">부산신항 실시간 스케줄</p>
         {workerData && (
-          <div className="mt-2 text-xs text-muted-foreground space-y-0.5">
-  <p className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</p>
-  <p>
-    <span className="font-semibold text-primary">이엔에스마린</span> ({workerData.ensCount}명) : {workerData.ensWorkers.map(w => w.name).join(', ')}
+          <div 
+  className="mt-2 text-[10px] text-muted-foreground space-y-0.5 pl-1 text-left"
+>
+  <p className="font-medium text-foreground text-[11px]">
+    {workerData.date} ({workerData.weekday})
   </p>
-  <p>
-    <span className="font-semibold text-accent">웨스턴마린</span> ({workerData.westCount}명) : {workerData.westWorkers.map(w => w.name).join(', ')}
+
+  <p className="leading-tight">
+    <span className="font-semibold text-primary">이엔에스마린</span> 
+    ({workerData.ensCount}명) :
+    <span className="ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span>
+  </p>
+
+  <p className="leading-tight">
+    <span className="font-semibold text-accent">웨스턴마린</span> 
+    ({workerData.westCount}명) :
+    <span className="ml-1">{workerData.westWorkers.map(w => w.name).join(', ')}</span>
   </p>
 </div>
+
         )}
       </div>
     </div>
