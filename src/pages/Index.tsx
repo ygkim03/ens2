@@ -98,7 +98,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
 <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
-  <div className="container mx-auto px-4 py-5 relative">
+  <div className="container mx-auto px-4 py-5">
     {/* 전체 컨테이너 */}
 <div>
 
@@ -111,14 +111,36 @@ const Index = () => {
     </div>
 
     {/* 텍스트 그룹 */}
-    <div>
-      <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-        이엔에스마린 도선 모니터링
-      </h1>
-      <p className="mt-1 text-base text-muted-foreground">
-        부산신항 실시간 스케줄
-      </p>
-    </div>
+      <div className="flex-1">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          이엔에스마린 도선 모니터링
+        </h1>
+        <div className="mt-1 flex items-center justify-between">
+          <p className="text-base text-muted-foreground">부산신항 실시간 스케줄</p>
+          <div className="flex gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(TERMINAL_BUTTONS[7].url, "_blank")}
+              className="h-6 w-auto px-2 py-2 text-xs bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
+            >
+              신항AIS
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchShipData}
+              className="gap-2 h-6 w-auto px-2 py-2 text-xs rounded-lg"
+            >
+              <RefreshCw className="h-3 w-3" />
+              새로고침
+            </Button>
+          </div>
+        </div>
+
+
+
+    
   </div>
 
   {/* 2. 근무자 명단 — 제목보다 더 왼쪽으로 이동 */}
@@ -147,26 +169,6 @@ const Index = () => {
 </div>
 
 
-    {/* 버튼 박스: 오른쪽 하단 고정 */}
-    <div className="absolute bottom-2 right-2 flex gap-1">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => window.open(TERMINAL_BUTTONS[7].url, "_blank")}
-        className="h-6 w-auto px-2 py-2 text-xs bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
-      >
-        신항AIS
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={fetchShipData}
-        className="gap-2 h-6 w-auto px-2 py-2 text-xs rounded-lg"
-      >
-        <RefreshCw className="h-3 w-3" />
-        새로고침
-      </Button>
-    </div>
   </div>
 </header>
 
