@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const API_URL = "https://yellow-truth-54a3.rladudrnr03.workers.dev/";
-const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbx5DMnZQDDeqHFA5vRvKC-XvmXbN7mxBsx5O2S_uET9RikN0CM_tIumFg3Ht5PBbHwgpQ/exec";
+const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbyr1r186o6qqsohU83QxMqKMnAjz55L4fm_tGhbVIqYOiKmwU_AwsKA3Rh6BGQT1c-TNg/exec";
 
 const TERMINAL_BUTTONS = [
   { name: "PNIT", url: "https://www.pnitl.com/infoservice/vessel/vslScheduleChart.jsp" },
