@@ -106,9 +106,11 @@ export const ShipTable = ({ data }: ShipTableProps) => {
       const dateTimeB = new Date(`${b.date}T${b.time}`);
       const now = new Date();
       
-      // 현재 시간과의 절대 차이 계산
-      const diffA = Math.abs(dateTimeA.getTime() - now.getTime());
-      const diffB = Math.abs(dateTimeB.getTime() - now.getTime());
+      // 현재 시간과의 차이 계산 (음수=과거, 양수=미래)
+      const diffA = dateTimeA.getTime() - now.getTime();
+      const diffB = dateTimeB.getTime() - now.getTime();
+      
+      // 과거(음수 큰→작은) → 미래(양수 작은→큰) 순서
       
       return diffA - diffB;
     });
