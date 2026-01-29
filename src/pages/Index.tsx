@@ -181,7 +181,7 @@ const Index = () => {
         <div className="mb-2">
           <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
             <div className="flex gap-1 min-w-max pb-1">
-              {TERMINAL_BUTTONS.slice(0, 8).map((terminal) => (
+              {TERMINAL_BUTTONS.slice(0, 7).map((terminal) => (
                 <Button
                   key={terminal.name}
                   variant="outline"
