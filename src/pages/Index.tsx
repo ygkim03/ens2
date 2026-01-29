@@ -56,7 +56,7 @@ const Index = () => {
         id: `${item.date}-${item.no}`,
         no: parseInt(item.no) || index + 1,
         date: item.date,
-        time: item.time,
+        time: item.time?.match(/\d{2}:\d{2}/)?.[0] || '',
         shipName: item.name,
         grt: item.grt.split('/')[0].trim(),
         loa: item.grt.split('/')[1]?.trim() || '',
