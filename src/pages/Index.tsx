@@ -16,7 +16,8 @@ const TERMINAL_BUTTONS = [
   { name: "BNCT", url: "https://info.bnctkorea.com/esvc/vessel/berthScheduleG" },
   { name: "BCT", url: "https://info.bct2-4.com/infoservice/index.html" },
   { name: "DGT", url: "https://info.dgtbusan.com/DGT/esvc/vessel/berthScheduleG" },
-  { name: "신항AIS", url: "https://www.marinetraffic.com/en/ais/home/centerx:128.788/centery:35.056/zoom:13" },
+  { name: "신항AIS", url: "https://www.marinetraffic.com/en/ais/home/centerx:128.807/centery:35.063/zoom:13" },
+  { name: "북항AIS", url: "https://www.marinetraffic.com/en/ais/home/centerx:129.086/centery:35.111/zoom:14" },
 ];
 
 const Index = () => {
@@ -122,6 +123,14 @@ const Index = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => window.open(TERMINAL_BUTTONS[8].url, "_blank")}
+              className="h-6 w-auto px-2 py-2 text-xs bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
+            >
+              북항AIS
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={fetchShipData}
               className="gap-2 h-6 w-auto px-2 py-2 text-xs rounded-lg"
             >
@@ -172,7 +181,7 @@ const Index = () => {
         <div className="mb-2">
           <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
             <div className="flex gap-1 min-w-max pb-1">
-              {TERMINAL_BUTTONS.slice(0, 7).map((terminal) => (
+              {TERMINAL_BUTTONS.slice(0, 8).map((terminal) => (
                 <Button
                   key={terminal.name}
                   variant="outline"
