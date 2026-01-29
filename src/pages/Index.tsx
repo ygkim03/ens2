@@ -179,7 +179,7 @@ const Index = () => {
                   value="all" 
                   className="h-5 px-2 text-[10px] data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
-                  전체
+                  부산 전체
                 </ToggleGroupItem>
                 <ToggleGroupItem 
                   value="sinhang" 
