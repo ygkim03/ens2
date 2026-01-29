@@ -200,7 +200,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="mt-12 py-6 border-t bg-card/50">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>이엔에스마린 부산신항 도선 모니터링</p>
+          <p>이엔에스마린 부산항 도선 모니터링</p>
           <p className="text-xs mt-1">실시간 업데이트</p>
         </div>
       </footer>
