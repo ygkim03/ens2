@@ -110,7 +110,7 @@ const Index = () => {
           이엔에스마린 도선 모니터링
         </h1>
         <div className="mt-1 flex items-center justify-between">
-          <p className="text-base text-muted-foreground">부산신항 실시간 스케줄</p>
+          <p className="text-base text-muted-foreground">부산항 실시간 스케줄</p>
           <div className="flex gap-1">
             <Button
               variant="outline"
