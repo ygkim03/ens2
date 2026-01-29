@@ -173,7 +173,7 @@ const Index = () => {
                 type="single" 
                 value={selectedArea} 
                 onValueChange={handleAreaChange}
-                className="ml-auto border rounded-md"
+                className="ml-auto"
               >
                 <ToggleGroupItem 
                   value="all" 
