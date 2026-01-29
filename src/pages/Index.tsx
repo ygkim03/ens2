@@ -177,19 +177,19 @@ const Index = () => {
               >
                 <ToggleGroupItem 
                   value="all" 
-                  className="h-5 px-2 text-[10px] border-r data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                   부산 전체
                 </ToggleGroupItem>
                 <ToggleGroupItem 
                   value="sinhang" 
-                  className="h-5 px-2 text-[10px] border-r data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                   신항
                 </ToggleGroupItem>
                 <ToggleGroupItem 
                   value="bukhang" 
-                  className="h-5 px-2 text-[10px] border-r data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                   북항/감천
                 </ToggleGroupItem>
