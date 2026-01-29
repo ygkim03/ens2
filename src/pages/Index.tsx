@@ -131,7 +131,7 @@ const Index = () => {
               variant="outline"
               size="sm"
               onClick={() => window.open(TERMINAL_BUTTONS[7].url, "_blank")}
-              className="h-6 w-auto px-1 py-2 text-[11px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
+              className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
             >
               신항AIS
             </Button>
@@ -139,7 +139,7 @@ const Index = () => {
               variant="outline"
               size="sm"
               onClick={() => window.open(TERMINAL_BUTTONS[8].url, "_blank")}
-              className="h-6 w-auto px-1 py-2 text-[11px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
+              className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
             >
               북항AIS
             </Button>
@@ -147,7 +147,7 @@ const Index = () => {
               variant="outline"
               size="sm"
               onClick={() => fetchShipData()}
-              className="gap-1 h-6 w-auto px-1 py-2 text-[11px] rounded-lg"
+              className="gap-1 h-5 w-auto px-1 py-2 text-[10.5px] rounded-lg"
             >
               <RefreshCw className="h-2 w-2" />
               새로고침
