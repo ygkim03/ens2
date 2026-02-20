@@ -149,7 +149,7 @@ const Index = () => {
               onClick={() => fetchShipData()}
               className="gap-1 h-5 w-auto px-1 py-2 text-[10.5px] rounded-lg"
             >
-              <RefreshCw className="h-1 w-1" />
+              <RefreshCw className="h-0.5 w-0.5" />
               새로고침
             </Button>
           </div>
