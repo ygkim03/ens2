@@ -118,7 +118,7 @@ export const ShipTable = ({ data }: ShipTableProps) => {
   return (
     <div className="space-y-2">
       {/* 라인별 필터 */}
-      <div className="flex items-center gap-1 flex-wrap">
+      <Collapsible>
         <div className="flex items-center gap-1">
           <Building2 className="h-3 w-3 text-muted-foreground shrink-0" />
           <Button
@@ -129,19 +129,31 @@ export const ShipTable = ({ data }: ShipTableProps) => {
           >
             전체 라인
           </Button>
+          {filterLine.size > 0 && (
+            <span className="text-xs text-muted-foreground truncate">{[...filterLine].join(', ')}</span>
+          )}
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-6 px-1 py-0 ml-auto">
+              <ChevronDown className="h-3 w-3 text-muted-foreground transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+            </Button>
+          </CollapsibleTrigger>
         </div>
-        {uniqueLines.map((line) => (
-          <Button
-            key={line}
-            variant={filterLine.has(line) ? "default" : "outline"}
-            onClick={() => toggleLineFilter(line)}
-            size="sm"
-            className="shrink-0 w-auto px-2 py-3 whitespace-nowrap h-6 text-xs"
-          >
-            {line}
-          </Button>
-        ))}
-      </div>
+          <CollapsibleContent>
+          <div className="flex items-center gap-1 flex-wrap mt-1">
+            {uniqueLines.map((line) => (
+              <Button
+                key={line}
+                variant={filterLine.has(line) ? "default" : "outline"}
+                onClick={() => toggleLineFilter(line)}
+                size="sm"
+                className="shrink-0 w-auto px-2 py-3 whitespace-nowrap h-6 text-xs"
+              >
+                {line}
+              </Button>
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* 선박 카드 리스트 */}
       <div className="space-y-1">
