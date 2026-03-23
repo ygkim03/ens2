@@ -244,7 +244,7 @@ const Index = () => {
             variant="outline"
             size="sm"
             onClick={() => setIsBoardOpen(true)}
-            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md"
+            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-100 text-slate-700 border-slate-200"
           >
             <MessageSquare className="h-3 w-3 mr-1" />
             익명 건의 게시판
