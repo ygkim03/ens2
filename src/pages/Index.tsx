@@ -244,7 +244,7 @@ const Index = () => {
             variant="outline"
             size="sm"
             onClick={() => setIsBoardOpen(true)}
-            className="h-7 text-[12px] px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white border-blue-600의
+            className="h-7 text-[12px] px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
           >
             <MessageSquare className="h-3 w-3 mr-1" />
             익명 건의 게시판
