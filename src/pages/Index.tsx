@@ -1,5 +1,5 @@
 import { ShipTable } from "@/components/ShipTable";
-import { Ship, Waves, RefreshCw, ChevronDown } from "lucide-react";
+import { Ship, Waves, RefreshCw, ChevronDown, MessageSquare, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [workerData, setWorkerData] = useState<WorkerData | null>(null);
   const [selectedArea, setSelectedArea] = useState<AreaTab>("all");
+  const [isBoardOpen, setIsBoardOpen] = useState(false);
 
   const fetchWorkerData = async () => {
     try {
@@ -237,6 +238,18 @@ const Index = () => {
             </div>
           </div>
         </div>
+        {/* 익명 게시판 버튼 */}
+        <div className="mb-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsBoardOpen(true)}
+            className="h-7 text-[12px] px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white border-blue-600의
+          >
+            <MessageSquare className="h-3 w-3 mr-1" />
+            익명 건의 게시판
+          </Button>
+        </div>
 
         {isLoading ? (
           <div className="text-center py-12">
@@ -255,6 +268,32 @@ const Index = () => {
           <p className="text-xs mt-1">실시간 업데이트</p>
         </div>
       </footer>
+      {/* 익명 게시판 팝업 (iframe) */}
+      {isBoardOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg shadow-xl w-full max-w-lg h-[80vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2 border-b">
+              <span className="flex items-center gap-2 font-semibold text-sm">
+                <MessageSquare className="h-4 w-4 text-blue-600" />
+                익명 건의 게시
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsBoardOpen(false)}
+                className="h-8 px-2 text-muted-foreground hover:text-destructive"
+              >
+                <X className="h-4 w-4" /> 닫기
+              </Button>
+            </div>
+            <iframe
+              src="https://western-6281b.web.app/"
+              className="flex-1 w-full border-0"
+              title="익명 게시판"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
