@@ -275,7 +275,7 @@ const Index = () => {
             <div className="flex items-center justify-between px-4 py-2 border-b">
               <span className="flex items-center gap-2 font-semibold text-sm">
                 <MessageSquare className="h-4 w-4 text-blue-600" />
-                익명 건의 게시
+                익명 건의 게시판
               </span>
               <Button
                 variant="ghost"
