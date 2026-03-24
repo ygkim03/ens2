@@ -287,7 +287,7 @@ const Index = () => {
               </Button>
             </div>
             <iframe
-              src="https://western-6281b.web.app/?v=4"
+              src="https://western-6281b.web.app/?v=5"
               className="flex-1 w-full border-0"
               title="익명 게시판"
             />
