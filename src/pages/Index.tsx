@@ -137,15 +137,15 @@ const Index = () => {
               신항AIS
             </Button>
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={() => window.open(TERMINAL_BUTTONS[8].url, "_blank")}
               className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
             >
-              북항 AIS
+              북항AIS
             </Button>
             <Button
-              type="button"
               variant="outline"
               size="sm"
               onClick={() => fetchShipData()}
