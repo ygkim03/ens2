@@ -249,8 +249,6 @@ const Index = () => {
             <MessageSquare className="h-3 w-3 mr-1" />
             익명 건의 게시판
           </Button>
-          
-          <a href="https://open.kakao.com/o/skj4Ejni" target="_blank" rel="noopener noreferrer">
           <Button
             variant="outline"
             size="sm"
@@ -259,8 +257,7 @@ const Index = () => {
           >
             <MessageCircleWarning className="h-3 w-3 mr-1" />
             1:1 익명 건의
-        </Button>
-          </a>
+          </Button>
         </div>
 
         {isLoading ? (
