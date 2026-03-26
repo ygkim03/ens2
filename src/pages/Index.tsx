@@ -253,11 +253,12 @@ const Index = () => {
           <Button
             variant="outline"
             size="sm"
+            type="button"
             onClick={() => window.open('https://open.kakao.com/o/skj4Ejni', '_blank')}
             className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300"
           >
             <MessageCircleWarning className="h-3 w-3 mr-1" />
-            1:1 익명 건의
+            1:1 익명건의
           </Button>
         </div>
 
