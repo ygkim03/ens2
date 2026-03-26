@@ -239,7 +239,7 @@ const Index = () => {
           </div>
         </div>
         {/* 익명 게시판 버튼 */}
-        <div className="mb-2">
+        <div className="mb-2 flex gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -252,7 +252,7 @@ const Index = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.open('https://open.kakao.com/o/skj4Ejni')}
+            onClick={() => window.open('https://open.kakao.com/o/skj4Ejni', '_blank')}
             className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300"
           >
             <MessageCircleWarning className="h-3 w-3 mr-1" />
