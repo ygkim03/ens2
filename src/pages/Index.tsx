@@ -6,12 +6,30 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+// ⭐ Firebase 관련 임포트 추가
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, query, where, getDocs, limit } from "firebase/firestore";
+
 const API_URLS = {
   all: "https://yellow-truth-54a3.rladudrnr03.workers.dev/",
   sinhang: "https://dark-resonance-e1c6.rladudrnr03.workers.dev/",
   bukhang: "https://falling-pond-0776.rladudrnr03.workers.dev/",
 };
 const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbwvUCyqCKwDl6DylgjTk8CuuAm77gx-ChRnjPmrpdIGBUIwcSz4Jb9VVoLrdZLvLSVKLw/exec";
+
+// ⭐ Firebase 설정 (관리자님 프로젝트 정보)
+const firebaseConfig = {
+  apiKey: "AIzaSyBFXDmizk9lRcDmZVislwm-wfwaFprxywA",
+  authDomain: "western-6281b.firebaseapp.com",
+  projectId: "western-6281b",
+  storageBucket: "western-6281b.firebasestorage.app",
+  messagingSenderId: "64799899840",
+  appId: "1:64799899840:web:a977661dab0d4ede40ad25"
+};
+
+// Firebase 초기화
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 type AreaTab = "all" | "sinhang" | "bukhang";
 
@@ -33,6 +51,29 @@ const Index = () => {
   const [workerData, setWorkerData] = useState<WorkerData | null>(null);
   const [selectedArea, setSelectedArea] = useState<AreaTab>("all");
   const [isBoardOpen, setIsBoardOpen] = useState(false);
+  
+  // ⭐ 새 글 상태 관리
+  const [hasNewPost, setHasNewPost] = useState(false);
+
+  // ⭐ 최근 3일 내 새 글 확인 로직
+  const checkNewPosts = async () => {
+    try {
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+      const q = query(
+        collection(db, "posts"),
+        where("timestamp", ">=", threeDaysAgo),
+        limit(1)
+      );
+
+      const querySnapshot = await getDocs(q);
+      // 데이터가 존재하면 true, 없으면 false
+      setHasNewPost(!querySnapshot.empty);
+    } catch (error) {
+      console.error("Failed to check new posts:", error);
+    }
+  };
 
   const fetchWorkerData = async () => {
     try {
@@ -50,18 +91,12 @@ const Index = () => {
     try {
       const response = await fetch(API_URLS[area], {
         mode: 'cors',
-        headers: {
-          'Accept': 'application/json',
-        }
+        headers: { 'Accept': 'application/json' }
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const data = await response.json();
-      
-      // API 데이터를 ShipSchedule 형식으로 변환
       const transformedData: ShipSchedule[] = data.map((item: any, index: number) => ({
         id: `${item.date}-${item.no}`,
         no: parseInt(item.no) || index + 1,
@@ -92,7 +127,6 @@ const Index = () => {
       setShipData(transformedData);
     } catch (error) {
       console.error("Failed to fetch ship data:", error);
-      alert("데이터를 불러오는데 실패했습니다. Worker API에 CORS 헤더를 추가해주세요.\n\nWorker 코드에 다음을 추가하세요:\n\nconst headers = {\n  'Access-Control-Allow-Origin': '*',\n  'Access-Control-Allow-Methods': 'GET, OPTIONS',\n  'Access-Control-Allow-Headers': 'Content-Type',\n  'Content-Type': 'application/json'\n};\n\nreturn new Response(JSON.stringify(data), { headers });");
     } finally {
       setIsLoading(false);
     }
@@ -108,115 +142,56 @@ const Index = () => {
   useEffect(() => {
     fetchShipData();
     fetchWorkerData();
+    checkNewPosts(); // ⭐ 앱 실행 시 새 글 체크
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
-<header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
-  <div className="container mx-auto px-4 py-5">
-    <div className="flex items-start gap-3">
-      {/* 아이콘 + 타이틀 */}
-      <div className="relative">
-        <Ship className="h-8 w-8 text-primary" />
-        <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
-      </div>
-      <div className="flex-1">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          이엔에스마린 도선 모니터링
-        </h1>
-        <div className="mt-1 flex items-center justify-between">
-          <p className="text-base text-muted-foreground">부산항 실시간 스케줄</p>
-          <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(TERMINAL_BUTTONS[7].url, "_blank")}
-              className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
-            >
-              신항AIS
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(TERMINAL_BUTTONS[8].url, "_blank")}
-              className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg"
-            >
-              북항AIS
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => fetchShipData()}
-              className="gap-1 h-5 w-auto px-1 py-2 text-[10.5px] rounded-lg"
-            >
-              <RefreshCw className="h-0.5 w-0.5" />
-              새로고침
-            </Button>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-                  {workerData && (
-          <Collapsible className="mt-2">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
-                  오늘 근무자
-                  <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
-                </Button>
-              </CollapsibleTrigger>
-              {/* Area Toggle Buttons */}
-              <ToggleGroup 
-                type="single" 
-                value={selectedArea} 
-                onValueChange={handleAreaChange}
-                className="ml-auto"
-              >
-                <ToggleGroupItem 
-                  value="all" 
-                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  부산 전체
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="sinhang" 
-                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  신항
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="bukhang" 
-                  className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  북항/감천
-                </ToggleGroupItem>
-              </ToggleGroup>
-              
+      <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
+        <div className="container mx-auto px-4 py-5">
+          <div className="flex items-start gap-3">
+            <div className="relative">
+              <Ship className="h-8 w-8 text-primary" />
+              <Waves className="h-4 w-4 text-accent absolute -bottom-1 -right-1" />
             </div>
-            <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
-              <p>
-                <span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명)
-                {workerData.ensStatus === "교대 전" && (
-                <span className="text-yellow-600 ml-1">(교대 전)</span>
-                )} : 
-                <span className="text-[11px] leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}
-                   </span>
-              </p>
-              <p>
-                <span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명){workerData.westStatus === "교대 전" && (
-                <span className="text-yellow-600 ml-1">(교대 전)</span>
-                )} : {workerData.westWorkers.map(w => w.name).join(', ')}
-              </p>
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-  </div>
-</header>
-
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                이엔에스마린 도선 모니터링
+              </h1>
+              <div className="mt-1 flex items-center justify-between">
+                <p className="text-base text-muted-foreground">부산항 실시간 스케줄</p>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="sm" onClick={() => window.open(TERMINAL_BUTTONS[7].url, "_blank")} className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg">신항AIS</Button>
+                  <Button variant="outline" size="sm" onClick={() => window.open(TERMINAL_BUTTONS[8].url, "_blank")} className="h-5 w-auto px-1 py-2 text-[10.5px] bg-red-500 text-white hover:bg-red-600 border-red-500 rounded-lg">북항AIS</Button>
+                  <Button variant="outline" size="sm" onClick={() => fetchShipData()} className="gap-1 h-5 w-auto px-1 py-2 text-[10.5px] rounded-lg"><RefreshCw className="h-0.5 w-0.5" />새로고침</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {workerData && (
+            <Collapsible className="mt-2">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
+                    오늘 근무자 <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                  </Button>
+                </CollapsibleTrigger>
+                <ToggleGroup type="single" value={selectedArea} onValueChange={handleAreaChange} className="ml-auto">
+                  <ToggleGroupItem value="all" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">부산 전체</ToggleGroupItem>
+                  <ToggleGroupItem value="sinhang" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">신항</ToggleGroupItem>
+                  <ToggleGroupItem value="bukhang" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">북항/감천</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
+                <p><span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명){workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : <span className="text-[11px] leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span></p>
+                <p><span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명){workerData.westStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.westWorkers.map(w => w.name).join(', ')}</p>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+        </div>
+      </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-3 max-w-6xl min-h-[calc(100vh-280px)]">
@@ -225,29 +200,31 @@ const Index = () => {
           <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
             <div className="flex gap-1 min-w-max pb-1">
               {TERMINAL_BUTTONS.slice(0, 7).map((terminal) => (
-                <Button
-                  key={terminal.name}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open(terminal.url, '_blank')}
-                  className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md"
-                >
-                  {terminal.name}
-                </Button>
+                <Button key={terminal.name} variant="outline" size="sm" onClick={() => window.open(terminal.url, '_blank')} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md">{terminal.name}</Button>
               ))}
             </div>
           </div>
         </div>
-        {/* 익명 게시판 버튼 */}
+
+        {/* 게시판 버튼 그룹 */}
         <div className="mb-2 flex gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsBoardOpen(true)}
-            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300"
+            onClick={() => {
+              setIsBoardOpen(true);
+              setHasNewPost(false); // 누르면 뱃지 사라짐
+            }}
+            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300 relative"
           >
             <MessageSquare className="h-3 w-3 mr-1" />
             익명 건의 게시판
+            {/* ⭐ 버튼 내 NEW 뱃지 UI */}
+            {hasNewPost && (
+              <span className="absolute -top-1 -right-1 flex h-3 w-6 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white ring-1 ring-white shadow-sm">
+                NEW
+              </span>
+            )}
           </Button>
           <Button
             variant="outline"
@@ -270,13 +247,13 @@ const Index = () => {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="mt-12 py-6 border-t bg-card/50">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>이엔에스마린 부산항 도선 모니터링</p>
           <p className="text-xs mt-1">실시간 업데이트</p>
         </div>
       </footer>
+
       {/* 익명 게시판 팝업 (iframe) */}
       {isBoardOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -286,12 +263,7 @@ const Index = () => {
                 <MessageSquare className="h-4 w-4 text-blue-600" />
                 익명 건의 게시판
               </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsBoardOpen(false)}
-                className="h-8 px-2 text-muted-foreground hover:text-destructive"
-              >
+              <Button variant="ghost" size="sm" onClick={() => setIsBoardOpen(false)} className="h-8 px-2 text-muted-foreground hover:text-destructive">
                 <X className="h-4 w-4" /> 닫기
               </Button>
             </div>
