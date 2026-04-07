@@ -169,39 +169,15 @@ const Index = () => {
           </div>
           {workerData && (
             
-          <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-1">
-  {/* ENS 영역 */}
-  <div className="flex">
-    <span className="font-semibold text-primary shrink-0">
-      ENS ({workerData.ensCount}명)
-      {workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>}
-      &nbsp;:&nbsp;
-    </span>
-    <div className="flex flex-wrap gap-x-1">
-      {workerData.ensWorkers.map((w, i) => (
-        <span key={i} className="whitespace-nowrap">
-          {w.name}{i < workerData.ensWorkers.length - 1 ? ',' : ''}
-        </span>
-      ))}
-    </div>
-  </div>
+          <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
 
-  {/* 웨스턴 영역 */}
-  <div className="flex">
-    <span className="font-semibold text-accent shrink-0">
-      웨스턴 ({workerData.westCount}명)
-      {workerData.westStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>}
-      &nbsp;:&nbsp;
-    </span>
-    <div className="flex flex-wrap gap-x-1">
-      {workerData.westWorkers.map((w, i) => (
-        <span key={i} className="whitespace-nowrap">
-          {w.name}{i < workerData.westWorkers.length - 1 ? ',' : ''}
-        </span>
-      ))}
-    </div>
-  </div>
-</CollapsibleContent>
+                <p><span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명){workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.ensWorkers.map(w => w.name).join(', ')}</p>
+
+                <p><span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명){workerData.westStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.westWorkers.map(w => w.name).join(', ')}</p>
+
+              </CollapsibleContent>
+
+            </Collapsible>
 
       
           )}
