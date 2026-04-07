@@ -5,8 +5,6 @@ import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-
-// ⭐ Firebase 관련 임포트 추가
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, limit } from "firebase/firestore";
 
@@ -17,7 +15,7 @@ const API_URLS = {
 };
 const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbwvUCyqCKwDl6DylgjTk8CuuAm77gx-ChRnjPmrpdIGBUIwcSz4Jb9VVoLrdZLvLSVKLw/exec";
 
-// ⭐ Firebase 설정 (관리자님 프로젝트 정보)
+// ⭐ Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBFXDmizk9lRcDmZVislwm-wfwaFprxywA",
   authDomain: "western-6281b.firebaseapp.com",
@@ -185,7 +183,7 @@ const Index = () => {
                 </ToggleGroup>
               </div>
               <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
-                <p><span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명){workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : <span className="text-[11px] leading-tight ml-1">{workerData.ensWorkers.map(w => w.name).join(', ')}</span></p>
+                <p><span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명){workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.ensWorkers.map(w => w.name).join(', ')}</p>
                 <p><span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명){workerData.westStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.westWorkers.map(w => w.name).join(', ')}</p>
               </CollapsibleContent>
             </Collapsible>
