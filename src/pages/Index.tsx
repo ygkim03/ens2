@@ -168,18 +168,25 @@ const Index = () => {
             </div>
           </div>
           {workerData && (
-            
-          <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
-
+            <Collapsible className="mt-2">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-medium text-foreground">{workerData.date} ({workerData.weekday})</span>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-5 px-2 py-0 text-xs text-muted-foreground hover:text-foreground">
+                    오늘 근무자 <ChevronDown className="h-3 w-3 ml-1 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                  </Button>
+                </CollapsibleTrigger>
+                <ToggleGroup type="single" value={selectedArea} onValueChange={handleAreaChange} className="ml-auto">
+                  <ToggleGroupItem value="all" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">부산 전체</ToggleGroupItem>
+                  <ToggleGroupItem value="sinhang" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">신항</ToggleGroupItem>
+                  <ToggleGroupItem value="bukhang" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">북항/감천</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
                 <p><span className="font-semibold text-primary">ENS</span> ({workerData.ensCount}명){workerData.ensStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.ensWorkers.map(w => w.name).join(', ')}</p>
-
                 <p><span className="font-semibold text-accent">웨스턴</span> ({workerData.westCount}명){workerData.westStatus === "교대 전" && <span className="text-yellow-600 ml-1">(교대 전)</span>} : {workerData.westWorkers.map(w => w.name).join(', ')}</p>
-
               </CollapsibleContent>
-
             </Collapsible>
-
-      
           )}
         </div>
       </header>
