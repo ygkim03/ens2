@@ -190,8 +190,7 @@ const Index = () => {
                       ({workerData.ensCount}명)
                       {workerData.ensStatus === "교대 전" && (
                         <span className="text-yellow-600 ml-1">(교대 전)</span>
-                      )}
-                      :
+                      )}{" :"}
                     </div>
                     <div className="ml-2 flex-1 break-keep">
                       {workerData.ensWorkers.map(w => w.name).join(', ')}
