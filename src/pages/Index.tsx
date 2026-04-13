@@ -245,7 +245,7 @@ const Index = () => {
             <MessageCircleWarning className="h-3 w-3 mr-1" />
             1:1 익명 건의
           </Button>
-          {/* ⭐ 사원 연락처 버튼 추가 */}
+          {/* ⭐ 직원 연락처 버튼 추가 */}
           <Button
             variant="outline"
             size="sm"
@@ -253,7 +253,7 @@ const Index = () => {
             className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200"
           >
             <Users className="h-3 w-3 mr-1" />
-            사원 연락처
+            직원 연락처
           </Button>
         </div>
 
@@ -296,14 +296,14 @@ const Index = () => {
         </div>
       )}
 
-      {/* ⭐ 사원 연락처 팝업 추가 (iframe) */}
+      {/* ⭐ 직원 연락처 팝업 추가 (iframe) */}
       {isContactsOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg shadow-xl w-full max-w-lg h-[80vh] flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2 border-b">
               <span className="flex items-center gap-2 font-semibold text-sm">
                 <Users className="h-4 w-4 text-blue-600" />
-                사원 연락처 명부
+                직원 연락처 명부
               </span>
               <Button variant="ghost" size="sm" onClick={() => setIsContactsOpen(false)} className="h-8 px-2 text-muted-foreground hover:text-destructive">
                 <X className="h-4 w-4" /> 닫기
@@ -312,7 +312,7 @@ const Index = () => {
             <iframe
               src="https://western-6281b.web.app/contacts/"
               className="flex-1 w-full border-0"
-              title="사원 연락처"
+              title="직원 연락처"
             />
           </div>
         </div>
