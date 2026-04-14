@@ -225,9 +225,9 @@ const Index = () => {
               setIsBoardOpen(true);
               setHasNewPost(false); // 누르면 뱃지 사라짐
             }}
-            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300 relative"
+            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200 relative"
           >
-            <MessageSquare className="h-3 w-3 mr-1" />
+            <MessageSquare className="h-3 w-3" />
             익명 건의 게시판
             {/* ⭐ 버튼 내 NEW 뱃지 UI */}
             {hasNewPost && (
@@ -240,10 +240,10 @@ const Index = () => {
             variant="outline"
             size="sm"
             onClick={() => window.open('https://open.kakao.com/o/skj4Ejni', '_blank')}
-            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-slate-200 text-slate-700 border-slate-300"
+            className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200"
           >
-            <MessageCircleWarning className="h-3 w-3 mr-1" />
-            1:1 익명 건의
+            <MessageCircleWarning className="h-3 w-3" />
+            1:1 익명 카톡
           </Button>
           {/* ⭐ 직원 연락처 버튼 추가 */}
           <Button
@@ -252,7 +252,7 @@ const Index = () => {
             onClick={() => setIsContactsOpen(true)}
             className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200"
           >
-            <Users className="h-3 w-3 mr-1" />
+            <Users className="h-3 w-3" />
             직원 연락처
           </Button>
         </div>
