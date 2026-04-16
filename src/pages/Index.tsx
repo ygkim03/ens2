@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs, limit } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, limit, doc, getDoc } from "firebase/firestore";
 
 
 const API_URLS = {
@@ -14,7 +14,7 @@ const API_URLS = {
   sinhang: "https://dark-resonance-e1c6.rladudrnr03.workers.dev/",
   bukhang: "https://falling-pond-0776.rladudrnr03.workers.dev/",
 };
-const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbwvUCyqCKwDl6DylgjTk8CuuAm77gx-ChRnjPmrpdIGBUIwcSz4Jb9VVoLrdZLvLSVKLw/exec";
+//const WORKER_API_URL = "https://script.google.com/macros/s/AKfycbwvUCyqCKwDl6DylgjTk8CuuAm77gx-ChRnjPmrpdIGBUIwcSz4Jb9VVoLrdZLvLSVKLw/exec"; 과거 출근자 API 주소
 
 // ⭐ Firebase 설정
 const firebaseConfig = {
@@ -74,14 +74,23 @@ const Index = () => {
     }
   };
 
+// 기존 WORKER_API_URL = "https://script.google..." 부분은 삭제하셔도 됩니다.
+
+  // ⭐ Firestore에서 근무자 데이터를 가져오도록 변경된 함수
   const fetchWorkerData = async () => {
     try {
-      const response = await fetch(WORKER_API_URL);
-      if (!response.ok) throw new Error('Failed to fetch worker data');
-      const data = await response.json();
-      setWorkerData(data);
+      // 'workers' 컬렉션의 'today' 문서를 가리킵니다.
+      const docRef = doc(db, "workers", "today");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        // Firestore의 데이터 구조가 기존 API 반환 구조와 동일하므로 그대로 세팅합니다.
+        setWorkerData(docSnap.data() as WorkerData);
+      } else {
+        console.log("오늘의 근무자 데이터가 아직 생성되지 않았습니다.");
+      }
     } catch (error) {
-      console.error("Failed to fetch worker data:", error);
+      console.error("Firebase에서 근무자 데이터를 가져오는 중 오류 발생:", error);
     }
   };
 
