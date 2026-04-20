@@ -18,7 +18,7 @@ const API_URLS = {
 
 // ⭐ Firebase 설정
 const firebaseConfig = {
-  apiKey: "%%VITE_FIREBASE_API_KEY%%",
+  apiKey: "",
   authDomain: "western-6281b.firebaseapp.com",
   projectId: "western-6281b",
   storageBucket: "western-6281b.firebasestorage.app",
