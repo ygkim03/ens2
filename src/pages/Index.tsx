@@ -106,9 +106,12 @@ const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClo
         <div className="px-5 py-4 space-y-3">
           <div className="flex items-center gap-3">
             <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-            <a href={`tel:${employee.phone}`} className="text-sm font-medium text-foreground hover:underline">
+            <button
+              onClick={() => window.location.href = `tel:${employee.phone}`}
+              className="text-sm font-medium text-foreground hover:underline cursor-pointer"
+            >
               {employee.phone}
-            </a>
+            </button>
           </div>
           {employee.age !== null && (
             <div className="flex items-center gap-3">
@@ -126,13 +129,13 @@ const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClo
 
         {/* 전화 버튼 — 빨강 제거, 차분한 스타일 */}
         <div className="px-5 pb-5">
-          
-            href={`tel:${employee.phone}`}
+          <button
+            onClick={() => window.location.href = `tel:${employee.phone}`}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors"
           >
             <Phone className="h-4 w-4" />
             전화하기
-          </a>
+          </button>
         </div>
       </div>
     </div>
