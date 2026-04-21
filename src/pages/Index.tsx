@@ -210,7 +210,7 @@ const Index = () => {
           name: data.public?.name || name,
           phone: data.public?.phone || details["전화번호"] || "-",
           company: data.private?.company || "",
-          photoUrl: data.public?.photoUrl || null,
+          photoUrl: data.private?.details?.photoUrl || null,
           age: calcAge(jumin),
           workYears: calcWorkYears(firstJoinDate),
         });
