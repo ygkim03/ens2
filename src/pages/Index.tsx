@@ -180,12 +180,25 @@ const Index = () => {
     setIsCardLoading(true);
     setSelectedEmployee(null);
     try {
-      const q = query(
-        collection(db, "employees"),
-        where("public.name", "==", name),
-        limit(1)
-      );
-      const snapshot = await getDocs(q);
+          let q;
+          
+          // "최재우"님인 경우 소속을 "WESTERN"으로 고정하여 쿼리
+          if (name === "최재우") {
+            q = query(
+              collection(db, "employees"),
+              where("public.name", "==", name),
+              where("private.company", "==", "WESTERN"), // ✅ 웨스턴 소속으로 특정
+              limit(1)
+            );
+          } else {
+            q = query(
+              collection(db, "employees"),
+              where("public.name", "==", name),
+              limit(1)
+            );
+          }
+    
+          const snapshot = await getDocs(q);
 
       if (!snapshot.empty) {
         const data = snapshot.docs[0].data();
