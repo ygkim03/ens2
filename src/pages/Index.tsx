@@ -231,6 +231,17 @@ const Index = () => {
     }
   };
 
+{employees.map((employee) => {
+  console.log("개별 직원 데이터:", employee); // <--- 각 직원마다 데이터가 어떻게 생겼는지 찍힙니다.
+  return (
+    <div key={employee.id}>
+      {/* ... UI 코드 ... */}
+    </div>
+  );
+})}
+
+
+  
   const checkNewPosts = async () => {
     try {
       const threeDaysAgo = new Date();
