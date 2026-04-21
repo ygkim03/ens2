@@ -83,28 +83,36 @@ const calcWorkYears = (startDate: string): string | null => {
 
 // ✅ 직원 카드 팝업 컴포넌트
 const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClose: () => void }) => {
-  // 회사별 로고 경로 설정
-const logoSrc = employee.company === "ENS" ? ensLogo : westernLogo;
+  const logoSrc = employee.company === "ENS" ? ensLogo : westernLogo;
 
   return (
-      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
-        <div className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden" onClick={(e) => e.stopPropagation()}>
-          <div className="px-5 py-3 flex items-center justify-between bg-slate-700">
-            <div className="flex items-center gap-3">
-              <div className="bg-white/10 rounded-lg p-1 shrink-0">
-                {/* 3. src에 변수 할당 */}
-                <img 
-                  src={logoSrc} 
-                  alt={employee.company} 
-                  className="h-7 w-7 object-contain"
-                />
-              </div>
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        
+        {/* 헤더 영역: 배경색을 조금 더 부드럽게 조정하거나 로고와 조화를 맞춤 */}
+        <div className="px-5 py-3 flex items-center justify-between bg-[#2d3748]"> 
+          <div className="flex items-center gap-3">
+            
+            {/* ✅ 로고 컨테이너: 원형 + 여백 + 배경색 적용 */}
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm overflow-hidden shrink-0">
+              <img 
+                src={logoSrc} 
+                alt={employee.company} 
+                className="w-full h-full object-contain" // 원본 비율 유지하며 꽉 채움
+                onError={(e) => { (e.target as HTMLImageElement).src = ""; }} 
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-300 font-medium leading-none mb-1">{employee.company}</span>
               <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
             </div>
-            <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
-              <X className="h-5 w-5" />
-            </button>
           </div>
+          
+          <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
         {/* 카드 바디 — 정보와 사진 배치 */}
         <div className="px-5 py-5 flex justify-between items-center gap-4">
