@@ -7,6 +7,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, limit, doc, getDoc } from "firebase/firestore";
+import ensLogo from "@/components/ui/ENS48.png";
+import westernLogo from "@/components/ui/WESTERN48.png";
 
 const API_URLS = {
   all: "https://yellow-truth-54a3.rladudrnr03.workers.dev/",
@@ -82,33 +84,27 @@ const calcWorkYears = (startDate: string): string | null => {
 // ✅ 직원 카드 팝업 컴포넌트
 const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClose: () => void }) => {
   // 회사별 로고 경로 설정
-  const logoSrc = employee.company === "ENS" 
-    ? "/src/components/ui/ENS48.png" 
-    : "/src/components/ui/WESTERN48.png";
+const logoSrc = employee.company === "ENS" ? ensLogo : westernLogo;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
-      <div
-        className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* 카드 헤더 — 높이 축소(py-3), 로고 아이콘 적용 */}
-        <div className="px-5 py-3 flex items-center justify-between bg-slate-700">
-          <div className="flex items-center gap-3">
-            <div className="bg-white/10 rounded-lg p-1 shrink-0">
-              <img 
-                src={logoSrc} 
-                alt={employee.company} 
-                className="h-7 w-7 object-contain"
-                onError={(e) => { (e.target as HTMLImageElement).src = ""; }} 
-              />
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
+        <div className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          <div className="px-5 py-3 flex items-center justify-between bg-slate-700">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/10 rounded-lg p-1 shrink-0">
+                {/* 3. src에 변수 할당 */}
+                <img 
+                  src={logoSrc} 
+                  alt={employee.company} 
+                  className="h-7 w-7 object-contain"
+                />
+              </div>
+              <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
             </div>
-            <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
+            <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
+              <X className="h-5 w-5" />
+            </button>
           </div>
-          <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
 
         {/* 카드 바디 — 정보와 사진 배치 */}
         <div className="px-5 py-5 flex justify-between items-center gap-4">
