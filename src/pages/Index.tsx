@@ -28,11 +28,12 @@ const db = getFirestore(app);
 
 type AreaTab = "all" | "sinhang" | "bukhang";
 
-// ✅ 직원 카드 데이터 타입
+// ✅ 직원 카드 데이터 타입 (photoUrl 추가)
 interface EmployeeCardData {
   name: string;
   phone: string;
   company: string;
+  photoUrl: string | null;
   age: number | null;
   workYears: string | null;
 }
@@ -49,10 +50,10 @@ const TERMINAL_BUTTONS = [
   { name: "북항AIS", url: "https://www.marinetraffic.com/en/ais/home/centerx:129.077/centery:35.112/zoom:13" },
 ];
 
-// ✅ 만나이 계산 (주민등록번호)
+// ✅ 만나이 계산
 const calcAge = (jumin: string): number | null => {
   if (!jumin || jumin.length < 8) return null;
-  const genderDigit = jumin[7]; // YYMMDD-X 에서 7번째(0-indexed)
+  const genderDigit = jumin[7];
   const yy = parseInt(jumin.substring(0, 2));
   const mm = parseInt(jumin.substring(2, 4));
   const dd = parseInt(jumin.substring(4, 6));
@@ -80,54 +81,72 @@ const calcWorkYears = (startDate: string): string | null => {
 
 // ✅ 직원 카드 팝업 컴포넌트
 const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClose: () => void }) => {
+  // 회사별 로고 경로 설정
+  const logoSrc = employee.company === "ENS" 
+    ? "/src/components/ui/ENS48.png" 
+    : "/src/components/ui/WESTERN48.png";
+
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
       <div
         className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 카드 헤더 — 진한 파랑 → 부드러운 slate/gray 계열 */}
-        <div className="px-5 py-4 flex items-center justify-between bg-slate-700">
+        {/* 카드 헤더 — 높이 축소(py-3), 로고 아이콘 적용 */}
+        <div className="px-5 py-3 flex items-center justify-between bg-slate-700">
           <div className="flex items-center gap-3">
-            <div className="bg-white/15 rounded-full p-2">
-              <UserCircle className="h-8 w-8 text-white/80" />
+            <div className="bg-white/10 rounded-lg p-1 shrink-0">
+              <img 
+                src={logoSrc} 
+                alt={employee.company} 
+                className="h-7 w-7 object-contain"
+                onError={(e) => { (e.target as HTMLImageElement).src = ""; }} 
+              />
             </div>
-            <div>
-              <p className="text-white/60 text-xs font-medium tracking-wide">{employee.company}</p>
-              <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
-            </div>
+            <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
           </div>
           <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* 카드 바디 */}
-        <div className="px-5 py-4 space-y-3">
-          <div className="flex items-center gap-3">
-            <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-            <button
-              onClick={() => window.location.href = `tel:${employee.phone}`}
-              className="text-sm font-medium text-foreground hover:underline cursor-pointer"
-            >
-              {employee.phone}
-            </button>
+        {/* 카드 바디 — 정보와 사진 배치 */}
+        <div className="px-5 py-5 flex justify-between items-center gap-4">
+          <div className="space-y-3 flex-1">
+            <div className="flex items-center gap-3">
+              <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+              <button
+                onClick={() => window.location.href = `tel:${employee.phone}`}
+                className="text-sm font-medium text-foreground hover:underline cursor-pointer"
+              >
+                {employee.phone}
+              </button>
+            </div>
+            {employee.age !== null && (
+              <div className="flex items-center gap-3">
+                <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="text-sm">만 <span className="font-semibold">{employee.age}세</span></span>
+              </div>
+            )}
+            {employee.workYears && (
+              <div className="flex items-center gap-3">
+                <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="text-sm">근무기간 <span className="font-semibold">{employee.workYears}</span></span>
+              </div>
+            )}
           </div>
-          {employee.age !== null && (
-            <div className="flex items-center gap-3">
-              <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="text-sm">만 <span className="font-semibold">{employee.age}세</span></span>
-            </div>
-          )}
-          {employee.workYears && (
-            <div className="flex items-center gap-3">
-              <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="text-sm">근무기간 <span className="font-semibold">{employee.workYears}</span></span>
-            </div>
-          )}
+
+          {/* 인물 사진 영역 */}
+          <div className="w-20 h-24 bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
+            {employee.photoUrl ? (
+              <img src={employee.photoUrl} alt={employee.name} className="w-full h-full object-cover" />
+            ) : (
+              <UserCircle className="h-12 w-12 text-slate-300" />
+            )}
+          </div>
         </div>
 
-        {/* 전화 버튼 — 빨강 제거, 차분한 스타일 */}
+        {/* 전화 버튼 */}
         <div className="px-5 pb-5">
           <button
             onClick={() => window.location.href = `tel:${employee.phone}`}
@@ -150,17 +169,13 @@ const Index = () => {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isContactsOpen, setIsContactsOpen] = useState(false);
   const [hasNewPost, setHasNewPost] = useState(false);
-  // ✅ 직원 카드 상태
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeCardData | null>(null);
   const [isCardLoading, setIsCardLoading] = useState(false);
 
-  // ✅ 이름 클릭 시 Firestore에서 직원 조회
   const handleWorkerClick = async (name: string) => {
     setIsCardLoading(true);
     setSelectedEmployee(null);
     try {
-      // employees 컬렉션에서 이름으로 조회
-      // public.name 필드로 검색
       const q = query(
         collection(db, "employees"),
         where("public.name", "==", name),
@@ -178,15 +193,16 @@ const Index = () => {
           name: data.public?.name || name,
           phone: data.public?.phone || details["전화번호"] || "-",
           company: data.private?.company || "",
+          photoUrl: data.public?.photoUrl || null,
           age: calcAge(jumin),
           workYears: calcWorkYears(firstJoinDate),
         });
       } else {
-        // Firestore에 없는 경우 이름만 표시
         setSelectedEmployee({
           name,
           phone: "-",
           company: "",
+          photoUrl: null,
           age: null,
           workYears: null,
         });
@@ -218,7 +234,7 @@ const Index = () => {
         setWorkerData(docSnap.data() as WorkerData);
       }
     } catch (error) {
-      console.error("Firebase에서 근무자 데이터를 가져오는 중 오류 발생:", error);
+      console.error("Firebase 오류:", error);
     }
   };
 
@@ -277,7 +293,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Header */}
       <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
         <div className="container mx-auto px-4 py-5">
           <div className="flex items-start gap-3">
@@ -315,7 +330,6 @@ const Index = () => {
                   <ToggleGroupItem value="bukhang" className="h-5 px-2 text-[10px] border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">북항/감천</ToggleGroupItem>
                 </ToggleGroup>
               </div>
-              {/* ✅ 이름을 클릭 가능한 버튼으로 변경 */}
               <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
                 <div className="flex text-xs text-muted-foreground">
                   <div className="shrink-0">
@@ -328,10 +342,7 @@ const Index = () => {
                   <div className="ml-2 flex-1 break-keep flex flex-wrap gap-x-1">
                     {workerData.ensWorkers.map((w, i) => (
                       <span key={w.name}>
-                        <button
-                          onClick={() => handleWorkerClick(w.name)}
-                          className="hover:underline cursor-pointer"
-                        >
+                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">
                           {w.name}
                         </button>
                         {i < workerData.ensWorkers.length - 1 && <span className="text-muted-foreground">, </span>}
@@ -350,10 +361,7 @@ const Index = () => {
                   <div className="ml-2 flex-1 break-keep flex flex-wrap gap-x-1">
                     {workerData.westWorkers.map((w, i) => (
                       <span key={w.name}>
-                        <button
-                          onClick={() => handleWorkerClick(w.name)}
-                          className="hover:underline cursor-pointer"
-                        >
+                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">
                           {w.name}
                         </button>
                         {i < workerData.westWorkers.length - 1 && <span className="text-muted-foreground">, </span>}
@@ -367,7 +375,6 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-3 max-w-6xl min-h-[calc(100vh-280px)]">
         <div className="mb-2">
           <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
@@ -414,7 +421,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* 익명 게시판 팝업 */}
+      {/* 팝업 섹션 */}
       {isBoardOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg shadow-xl w-full max-w-lg h-[80vh] flex flex-col overflow-hidden">
@@ -427,7 +434,6 @@ const Index = () => {
         </div>
       )}
 
-      {/* 직원 연락처 팝업 */}
       {isContactsOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg shadow-xl w-full max-w-lg h-[80vh] flex flex-col overflow-hidden">
@@ -440,7 +446,6 @@ const Index = () => {
         </div>
       )}
 
-      {/* ✅ 직원 카드 로딩 스피너 */}
       {isCardLoading && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
           <div className="bg-background rounded-xl p-6 flex flex-col items-center gap-3">
@@ -450,7 +455,6 @@ const Index = () => {
         </div>
       )}
 
-      {/* ✅ 직원 카드 팝업 */}
       {selectedEmployee && !isCardLoading && (
         <EmployeeCard employee={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
       )}
