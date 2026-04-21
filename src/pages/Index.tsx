@@ -205,13 +205,13 @@ const Index = () => {
         const details = data.private?.details || {};
         const jumin = details["주민등록번호"] || "";
         const firstJoinDate = details["최초입사일"] || "";
-        const rawPhotoUrl = details["photoUrl"] || null;
+
 
         setSelectedEmployee({
           name: data.public?.name || name,
           phone: data.public?.phone || details["전화번호"] || "-",
           company: data.private?.company || "",
-          photoUrl: rawPhotoUrl ? rawPhotoUrl.replace("file/d/", "uc?id=").replace("/view?usp=sharing", "").replace("/view", "") : null,
+          photoUrl: details.photoUrl || null,
           age: calcAge(jumin),
           workYears: calcWorkYears(firstJoinDate),
         });
