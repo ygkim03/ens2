@@ -1,5 +1,5 @@
 import { ShipTable } from "@/components/ShipTable";
-import { Ship, Waves, RefreshCw, ChevronDown, MessageSquare, MessageCircleWarning, X, Users, Phone, Clock, Calendar, UserCircle } from "lucide-react";
+import { Ship, Waves, RefreshCw, ChevronDown, MessageSquare, MessageCircleWarning, X, Users, Phone, Clock, Calendar, UserCircle, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,9 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, limit, doc, getDoc } from "firebase/firestore";
 import ensLogo from "@/components/ui/ENS48.png";
 import westernLogo from "@/components/ui/WESTERN48.png";
+
+// ✅ GAS 웹 앱 URL (배포 후 받은 URL을 여기에 넣으세요)
+const GAS_SYNC_URL = "https://script.google.com/macros/s/AKfycbwvUCyqCKwDl6DylgjTk8CuuAm77gx-ChRnjPmrpdIGBUIwcSz4Jb9VVoLrdZLvLSVKLw/exec";
 
 const API_URLS = {
   all: "https://yellow-truth-54a3.rladudrnr03.workers.dev/",
@@ -30,7 +33,6 @@ const db = getFirestore(app);
 
 type AreaTab = "all" | "sinhang" | "bukhang";
 
-// ✅ 직원 카드 데이터 타입 (photoUrl 추가)
 interface EmployeeCardData {
   name: string;
   phone: string;
@@ -52,7 +54,6 @@ const TERMINAL_BUTTONS = [
   { name: "북항AIS", url: "https://www.marinetraffic.com/en/ais/home/centerx:129.077/centery:35.112/zoom:13" },
 ];
 
-// ✅ 만나이 계산
 const calcAge = (jumin: string): number | null => {
   if (!jumin || jumin.length < 8) return null;
   const genderDigit = jumin[7];
@@ -63,7 +64,6 @@ const calcAge = (jumin: string): number | null => {
   if (genderDigit === '1' || genderDigit === '2') fullYear = 1900 + yy;
   else if (genderDigit === '3' || genderDigit === '4') fullYear = 2000 + yy;
   else return null;
-
   const today = new Date();
   let age = today.getFullYear() - fullYear;
   const birthdayThisYear = new Date(today.getFullYear(), mm - 1, dd);
@@ -71,7 +71,6 @@ const calcAge = (jumin: string): number | null => {
   return age;
 };
 
-// ✅ 근무기간 계산
 const calcWorkYears = (startDate: string): string | null => {
   if (!startDate) return null;
   const start = new Date(startDate);
@@ -81,50 +80,28 @@ const calcWorkYears = (startDate: string): string | null => {
   return `${Math.floor(diffYears)}.${Math.floor((diffYears % 1) * 10)}년`;
 };
 
-// ✅ 직원 카드 팝업 컴포넌트
 const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClose: () => void }) => {
   const logoSrc = employee.company === "ENS" ? ensLogo : westernLogo;
-
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-background rounded-xl shadow-2xl w-full max-w-xs overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        
-        {/* 헤더 영역: 배경색을 조금 더 부드럽게 조정하거나 로고와 조화를 맞춤 */}
         <div className="px-5 py-3 flex items-center justify-between bg-[#2d3748]"> 
           <div className="flex items-center gap-3">
-            
-            {/* ✅ 로고 컨테이너: 원형 + 여백 + 배경색 적용 */}
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm overflow-hidden shrink-0">
-              <img 
-                src={logoSrc} 
-                alt={employee.company} 
-                className="w-full h-full object-contain" // 원본 비율 유지하며 꽉 채움
-                onError={(e) => { (e.target as HTMLImageElement).src = ""; }} 
-              />
+              <img src={logoSrc} alt={employee.company} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).src = ""; }} />
             </div>
-
             <div className="flex flex-col">
               <span className="text-[10px] text-slate-300 font-medium leading-none mb-1">{employee.company}</span>
               <p className="text-white font-bold text-lg leading-tight">{employee.name}</p>
             </div>
           </div>
-          
-          <button onClick={onClose} className="text-white/50 hover:text-white transition-colors">
-            <X className="h-5 w-5" />
-          </button>
+          <button onClick={onClose} className="text-white/50 hover:text-white transition-colors"><X className="h-5 w-5" /></button>
         </div>
-
-        {/* 카드 바디 — 정보와 사진 배치 */}
         <div className="px-5 py-5 flex justify-between items-center gap-4">
           <div className="space-y-3 flex-1">
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-              <button
-                onClick={() => window.location.href = `tel:${employee.phone}`}
-                className="text-sm font-medium text-foreground hover:underline cursor-pointer"
-              >
-                {employee.phone}
-              </button>
+              <button onClick={() => window.location.href = `tel:${employee.phone}`} className="text-sm font-medium text-foreground hover:underline cursor-pointer">{employee.phone}</button>
             </div>
             {employee.age !== null && (
               <div className="flex items-center gap-3">
@@ -139,25 +116,13 @@ const EmployeeCard = ({ employee, onClose }: { employee: EmployeeCardData; onClo
               </div>
             )}
           </div>
-
-          {/* 인물 사진 영역 */}
           <div className="w-20 h-24 bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
-            {employee.photoUrl ? (
-              <img src={employee.photoUrl} alt={employee.name} className="w-full h-full object-cover" />
-            ) : (
-              <UserCircle className="h-12 w-12 text-slate-300" />
-            )}
+            {employee.photoUrl ? <img src={employee.photoUrl} alt={employee.name} className="w-full h-full object-cover" /> : <UserCircle className="h-12 w-12 text-slate-300" />}
           </div>
         </div>
-
-        {/* 전화 버튼 */}
         <div className="px-5 pb-5">
-          <button
-            onClick={() => window.location.href = `tel:${employee.phone}`}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors"
-          >
-            <Phone className="h-4 w-4" />
-            전화하기
+          <button onClick={() => window.location.href = `tel:${employee.phone}`} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors">
+            <Phone className="h-4 w-4" />전화하기
           </button>
         </div>
       </div>
@@ -175,55 +140,63 @@ const Index = () => {
   const [hasNewPost, setHasNewPost] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeCardData | null>(null);
   const [isCardLoading, setIsCardLoading] = useState(false);
+  
+  // ✅ 동기화 상태 추가
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // ✅ 수동 동기화 핸들러 (GAS 호출)
+  const handleManualSync = async () => {
+    if (isSyncing) return;
+    const confirmSync = window.confirm("근무자 명단을 구글 시트와 즉시 동기화하시겠습니까?");
+    if (!confirmSync) return;
+
+    setIsSyncing(true);
+    try {
+      // GAS doGet의 action=sync 파라미터 호출
+      const response = await fetch(`${GAS_SYNC_URL}?action=sync`);
+      const resultText = await response.text();
+
+      if (resultText.includes("sync done")) {
+        alert("구글 시트 동기화 완료! 최신 데이터를 불러옵니다.");
+        // Firestore 반영 시간을 위해 1.5초 대기 후 새로고침
+        setTimeout(async () => {
+          await fetchWorkerData();
+          setIsSyncing(false);
+        }, 1500);
+      } else {
+        throw new Error("동기화 응답이 올바르지 않습니다.");
+      }
+    } catch (error) {
+      console.error("동기화 실패:", error);
+      alert("동기화 중 오류가 발생했습니다. GAS URL 및 권한을 확인하세요.");
+      setIsSyncing(false);
+    }
+  };
 
   const handleWorkerClick = async (name: string) => {
     setIsCardLoading(true);
     setSelectedEmployee(null);
     try {
-          let q;
-          
-          // "최재우"님인 경우 소속을 "WESTERN"으로 고정하여 쿼리
-          if (name === "최재우") {
-            q = query(
-              collection(db, "employees"),
-              where("public.name", "==", name),
-              where("private.company", "==", "WESTERN"), // ✅ 웨스턴 소속으로 특정
-              limit(1)
-            );
-          } else {
-            q = query(
-              collection(db, "employees"),
-              where("public.name", "==", name),
-              limit(1)
-            );
-          }
-    
-          const snapshot = await getDocs(q);
-
+      let q;
+      if (name === "최재우") {
+        q = query(collection(db, "employees"), where("public.name", "==", name), where("private.company", "==", "WESTERN"), limit(1));
+      } else {
+        q = query(collection(db, "employees"), where("public.name", "==", name), limit(1));
+      }
+      const snapshot = await getDocs(q);
       if (!snapshot.empty) {
         const data = snapshot.docs[0].data();
         const details = data.private?.details || {};
-        const jumin = details["주민등록번호"] || "";
-        const firstJoinDate = details["최초입사일"] || "";
-
-
         setSelectedEmployee({
           name: data.public?.name || name,
           phone: data.public?.phone || details["전화번호"] || "-",
           company: data.private?.company || "",
           photoUrl: details.photoUrl || null,
-          age: calcAge(jumin),
-          workYears: calcWorkYears(firstJoinDate),
+          age: calcAge(details["주민등록번호"] || ""),
+          workYears: calcWorkYears(details["최초입사일"] || ""),
         });
       } else {
-        setSelectedEmployee({
-          name,
-          phone: "-",
-          company: "",
-          photoUrl: null,
-          age: null,
-          workYears: null,
-        });
+        setSelectedEmployee({ name, phone: "-", company: "", photoUrl: null, age: null, workYears: null });
       }
     } catch (error) {
       console.error("직원 정보 조회 실패:", error);
@@ -232,7 +205,6 @@ const Index = () => {
     }
   };
 
-  
   const checkNewPosts = async () => {
     try {
       const threeDaysAgo = new Date();
@@ -261,7 +233,6 @@ const Index = () => {
     setIsLoading(true);
     try {
       const response = await fetch(API_URLS[area], { mode: 'cors', headers: { 'Accept': 'application/json' } });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       const transformedData: ShipSchedule[] = data.map((item: any, index: number) => ({
         id: `${item.date}-${item.no}`,
@@ -350,39 +321,49 @@ const Index = () => {
                 </ToggleGroup>
               </div>
               <CollapsibleContent className="mt-1 text-xs text-muted-foreground space-y-0.5">
+                {/* ✅ ENS 동기화 버튼 영역 */}
                 <div className="flex text-xs text-muted-foreground">
-                  <div className="shrink-0">
+                  <button 
+                    onClick={handleManualSync}
+                    disabled={isSyncing}
+                    className="shrink-0 flex items-center hover:bg-slate-100 rounded px-1 transition-colors disabled:opacity-50"
+                  >
                     <span className="font-semibold text-primary">ENS</span>
-                    ({workerData.ensCount}명)
+                    <span className="ml-0.5">({workerData.ensCount}명)</span>
+                    {isSyncing && <Loader2 className="h-2 w-2 ml-1 animate-spin" />}
                     {workerData.ensStatus === "교대 전" && (
-                      <span className="text-yellow-600 ml-1">(교대 전)</span>
-                    )}{" :"}
-                  </div>
+                      <span className="text-yellow-600 ml-1 text-[10px]">(교대 전)</span>
+                    )}
+                    <span className="ml-1 text-slate-400">:</span>
+                  </button>
                   <div className="ml-2 flex-1 break-keep flex flex-wrap gap-x-1">
                     {workerData.ensWorkers.map((w, i) => (
                       <span key={w.name}>
-                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">
-                          {w.name}
-                        </button>
+                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">{w.name}</button>
                         {i < workerData.ensWorkers.length - 1 && <span className="text-muted-foreground">, </span>}
                       </span>
                     ))}
                   </div>
                 </div>
+
+                {/* ✅ 웨스턴 동기화 버튼 영역 */}
                 <div className="flex text-xs text-muted-foreground">
-                  <div className="shrink-0">
+                  <button 
+                    onClick={handleManualSync}
+                    disabled={isSyncing}
+                    className="shrink-0 flex items-center hover:bg-slate-100 rounded px-1 transition-colors disabled:opacity-50"
+                  >
                     <span className="font-semibold text-accent">웨스턴</span>
-                    ({workerData.westCount}명)
+                    <span className="ml-0.5">({workerData.westCount}명)</span>
                     {workerData.westStatus === "교대 전" && (
-                      <span className="text-yellow-600 ml-1">(교대 전)</span>
-                    )}{" :"}
-                  </div>
+                      <span className="text-yellow-600 ml-1 text-[10px]">(교대 전)</span>
+                    )}
+                    <span className="ml-1 text-slate-400">:</span>
+                  </button>
                   <div className="ml-2 flex-1 break-keep flex flex-wrap gap-x-1">
                     {workerData.westWorkers.map((w, i) => (
                       <span key={w.name}>
-                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">
-                          {w.name}
-                        </button>
+                        <button onClick={() => handleWorkerClick(w.name)} className="hover:underline cursor-pointer">{w.name}</button>
                         {i < workerData.westWorkers.length - 1 && <span className="text-muted-foreground">, </span>}
                       </span>
                     ))}
@@ -407,20 +388,13 @@ const Index = () => {
 
         <div className="mb-2 flex gap-2">
           <Button variant="outline" size="sm" onClick={() => { setIsBoardOpen(true); setHasNewPost(false); }} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200 relative">
-            <MessageSquare className="h-3 w-3" />
-            익명 건의 게시판
+            <MessageSquare className="h-3 w-3" />익명 건의 게시판
             {hasNewPost && (
               <span className="absolute -top-1 -right-1 flex h-3 w-6 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white ring-1 ring-white shadow-sm">NEW</span>
             )}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => window.open('https://open.kakao.com/o/skj4Ejni', '_blank')} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200">
-            <MessageCircleWarning className="h-3 w-3" />
-            1:1 익명 카톡
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setIsContactsOpen(true)} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200">
-            <Users className="h-3 w-3" />
-            직원 연락처
-          </Button>
+          <Button variant="outline" size="sm" onClick={() => window.open('https://open.kakao.com/o/skj4Ejni', '_blank')} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200"><MessageCircleWarning className="h-3 w-3" />1:1 익명 카톡</Button>
+          <Button variant="outline" size="sm" onClick={() => setIsContactsOpen(true)} className="h-6 text-[12px] whitespace-nowrap min-w-[45px] px-2 py-1 rounded-md bg-blue-50 text-blue-700 border-blue-200"><Users className="h-3 w-3" />직원 연락처</Button>
         </div>
 
         {isLoading ? (
@@ -428,9 +402,7 @@ const Index = () => {
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-muted-foreground">데이터를 불러오는 중...</p>
           </div>
-        ) : (
-          <ShipTable data={shipData} />
-        )}
+        ) : <ShipTable data={shipData} />}
       </main>
 
       <footer className="mt-12 py-6 border-t bg-card/50">
@@ -440,7 +412,6 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* 팝업 섹션 */}
       {isBoardOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg shadow-xl w-full max-w-lg h-[80vh] flex flex-col overflow-hidden">
@@ -468,7 +439,7 @@ const Index = () => {
       {isCardLoading && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
           <div className="bg-background rounded-xl p-6 flex flex-col items-center gap-3">
-            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
             <p className="text-sm text-muted-foreground">직원 정보 불러오는 중...</p>
           </div>
         </div>
