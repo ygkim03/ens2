@@ -194,6 +194,11 @@ export const WeatherBar = () => {
 
   return (
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
+      <style>{`
+        .weather-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
       <div className="relative h-7 flex items-center">
         {/* 왼쪽 고정: 기온/체감 */}
         <div className="flex-shrink-0 flex items-center gap-1.5 px-2 border-r border-blue-200 bg-blue-100/40 h-full text-[11px] z-10">
