@@ -1,5 +1,6 @@
 import { ShipTable } from "@/components/ShipTable";
 import { Ship, Waves, RefreshCw, ChevronDown, MessageSquare, MessageCircleWarning, X, Users, Phone, Clock, Calendar, UserCircle, Loader2 } from "lucide-react";
+import { WeatherBar } from "@/components/WeatherBar";
 import { useState, useEffect } from "react";
 import { ShipSchedule, WorkerData } from "@/types/ship";
 import { Button } from "@/components/ui/button";
@@ -376,6 +377,8 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-3 max-w-6xl min-h-[calc(100vh-280px)]">
+        <WeatherBar />
+        
         <div className="mb-2">
           <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
             <div className="flex gap-1 min-w-max pb-1">
