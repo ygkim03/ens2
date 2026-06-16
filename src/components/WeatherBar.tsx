@@ -198,6 +198,10 @@ export const WeatherBar = () => {
         .weather-marquee {
           animation: marquee 5s linear infinite;
         }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
       `}</style>
       <div className="relative h-7 flex items-center">
         {/* 왼쪽 고정: 기온/체감 */}
