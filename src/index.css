@@ -118,3 +118,17 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @keyframes weather-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .weather-marquee {
+    animation: weather-scroll 40s linear infinite;
+    will-change: transform;
+  }
+  .weather-marquee:hover {
+    animation-play-state: paused;
+  }
+}
