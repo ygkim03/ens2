@@ -190,7 +190,7 @@ export const WeatherBar = () => {
     if (i < items.length - 1) interleaved.push(sep(i));
   });
 
-  const chillText = current.chill ? current.chill.replace(/체감\(|\)/g, "") : "";
+  const chillText = current.chill ? current.chill.replace(/체감\(|\)|℃/g, "") : "";
 
   return (
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
