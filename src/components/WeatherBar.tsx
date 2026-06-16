@@ -196,7 +196,7 @@ export const WeatherBar = () => {
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
       <style>{`
         .weather-marquee {
-          animation: marquee 5s linear infinite;
+          animation: marquee 30s linear infinite;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
