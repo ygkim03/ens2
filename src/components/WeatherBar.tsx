@@ -210,13 +210,26 @@ export const WeatherBar = () => {
           )}
         </div>
         {/* 오른쪽 마퀴 */}
-        <div className="flex-1 overflow-hidden">
-          <div className="weather-marquee flex items-center gap-2 whitespace-nowrap text-[11px] px-2">
-            {interleaved}
-            <span className="text-blue-300 px-1">|</span>
-            {interleaved}
-          </div>
-        </div>
+        {/* 오른쪽 마퀴 */}
+<div className="flex-1 overflow-hidden">
+  {/* 💡 핵심 1: w-max 추가로 글자 길이에 맞춰 컨테이너 너비 확장 */}
+  <div className="weather-marquee w-max flex items-center text-[11px]">
+    
+    {/* 💡 핵심 2: 두 세트를 각각 동일한 div로 묶어 오차를 없앰 */}
+    {/* 1번 세트 */}
+    <div className="flex items-center gap-2 px-2">
+      {interleaved}
+      <span className="text-blue-300 px-1">|</span>
+    </div>
+
+    {/* 2번 세트 (1번 세트와 완벽히 동일한 구조) */}
+    <div className="flex items-center gap-2 px-2">
+      {interleaved}
+      <span className="text-blue-300 px-1">|</span>
+    </div>
+
+  </div>
+</div>
       </div>
     </div>
   );
