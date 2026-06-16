@@ -196,7 +196,7 @@ export const WeatherBar = () => {
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
       <style>{`
         .weather-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 60s linear infinite;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -212,7 +212,6 @@ export const WeatherBar = () => {
             <span className="text-muted-foreground whitespace-nowrap">체감 {chillText}℃</span>
           )}
         </div>
-        {/* 오른쪽 마퀴 */}
         {/* 오른쪽 마퀴 */}
 <div className="flex-1 overflow-hidden">
   {/* 💡 핵심 1: w-max 추가로 글자 길이에 맞춰 컨테이너 너비 확장 */}
