@@ -140,13 +140,6 @@ export const WeatherBar = () => {
   }
 
   const items: React.ReactNode[] = [];
-  items.push(
-    <span key="temp" className="inline-flex items-center gap-1">
-      <Thermometer className="h-3 w-3 text-red-500" />
-      <strong className="text-foreground">{current.temp}℃</strong>
-      <span className="text-muted-foreground">체감 {current.chill.replace(/체감\(|\)/g, "")}</span>
-    </span>
-  );
   if (current.minmax) {
     items.push(<span key="minmax" className="text-muted-foreground">{current.minmax}</span>);
   }
@@ -197,13 +190,26 @@ export const WeatherBar = () => {
     if (i < items.length - 1) interleaved.push(sep(i));
   });
 
+  const chillText = current.chill ? current.chill.replace(/체감\(|\)/g, "") : "";
+
   return (
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
       <div className="relative h-7 flex items-center">
-        <div className="weather-marquee flex items-center gap-2 whitespace-nowrap text-[11px] px-2">
-          {interleaved}
-          <span className="text-blue-300 px-1">|</span>
-          {interleaved}
+        {/* 왼쪽 고정: 기온/체감 */}
+        <div className="flex-shrink-0 flex items-center gap-1.5 px-2 border-r border-blue-200 bg-blue-100/40 h-full text-[11px] z-10">
+          <Thermometer className="h-3 w-3 text-red-500 flex-shrink-0" />
+          <strong className="text-foreground whitespace-nowrap">{current.temp}℃</strong>
+          {chillText && (
+            <span className="text-muted-foreground whitespace-nowrap">체감 {chillText}℃</span>
+          )}
+        </div>
+        {/* 오른쪽 마퀴 */}
+        <div className="flex-1 overflow-hidden">
+          <div className="weather-marquee flex items-center gap-2 whitespace-nowrap text-[11px] px-2">
+            {interleaved}
+            <span className="text-blue-300 px-1">|</span>
+            {interleaved}
+          </div>
         </div>
       </div>
     </div>
