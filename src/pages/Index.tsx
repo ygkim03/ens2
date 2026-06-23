@@ -285,7 +285,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       <header className="sticky top-0 z-10 backdrop-blur-lg bg-background/80 border-b shadow-sm">
-        <div className="container mx-auto px-4 py-5">
+        <div className="container mx-auto px-4 pt-5 pb-1">
           <div className="flex items-start gap-3">
             <div className="relative">
               <Ship className="h-8 w-8 text-primary" />
