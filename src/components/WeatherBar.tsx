@@ -151,7 +151,7 @@ export const WeatherBar = () => {
   }
 
   const sep = (i: number) => (
-    <span key={`s${i}`} className="text-blue-300 px-0.5">|</span>
+    <span key={`s${i}`} className="text-blue-300 px">|</span>
   );
 
   const interleaved: React.ReactNode[] = [];
@@ -161,12 +161,21 @@ export const WeatherBar = () => {
   });
 
   const chillText = current.chill ? current.chill.replace(/체감\(|\)|℃/g, "") : "";
+  const chillNum = chillText ? Number(chillText) : NaN;
+  const chillColor = (() => {
+    if (!Number.isFinite(chillNum)) return "text-blue-700";
+    if (chillNum >= 38) return "text-red-600";
+    if (chillNum >= 35) return "text-orange-500";
+    if (chillNum >= 33) return "text-yellow-500";
+    if (chillNum >= 31) return "text-yellow-400";
+    return "text-blue-700";
+  })();
 
   return (
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
       <style>{`
         .weather-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 25s linear infinite;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -181,20 +190,21 @@ export const WeatherBar = () => {
           {chillText && (
             <span className="whitespace-nowrap">
               <span className="text-[9px] text-blue-500">체감</span>
-              <span className="text-blue-700 font-semibold">{chillText}℃</span>
+              <span className={`${chillColor} font-semibold`}>{chillText}℃</span>
             </span>
           )}
         </div>
+
         {/* 오른쪽 마퀴 */}
         <div className="flex-1 overflow-hidden">
           <div className="weather-marquee w-max flex items-center">
-            <div className="flex items-center gap-2 px-1.5">
+            <div className="flex items-center gap-1 px-1">
               {interleaved}
-              <span className="text-blue-300 px-0.5">|</span>
+              <span className="text-blue-300 px">|</span>
             </div>
-            <div className="flex items-center gap-2 px-1.5">
+            <div className="flex items-center gap-1 px-1">
               {interleaved}
-              <span className="text-blue-300 px-0.5">|</span>
+              <span className="text-blue-300 px">|</span>
             </div>
           </div>
         </div>
