@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Thermometer, Wind, Droplets, Cloud } from "lucide-react";
+import { Thermometer, Wind, Droplets } from "lucide-react";
 
 const WEATHER_API_URL = "https://round-thunder-8301.rladudrnr03.workers.dev/";
 
@@ -10,9 +10,6 @@ interface CurrentWeather {
   humidity: string;
   wind: string;
   rain: string;
-  pm25: { val: string; level: string };
-  pm10: { val: string; level: string };
-  o3: { val: string; level: string };
   updated: string;
   diff: string;
 }
@@ -38,27 +35,18 @@ const parseCurrent = (html: string): CurrentWeather | null => {
     const wrap2 = doc.querySelectorAll(".cmp-cur-weather .wrap-2 li");
     const humidity = wrap2[0]?.querySelector(".val")?.textContent?.trim().replace(/\s+/g, " ") || "";
     const wind = wrap2[1]?.querySelector(".val")?.textContent?.trim().replace(/\s+/g, " ") || "";
-    const rain = wrap2[2]?.querySelector(".val")?.textContent?.trim().replace(/\s+/g, " ") || "";
     const updated = doc.querySelector(".odam-updated .updated-at")?.textContent?.replace(/\s+/g, " ").trim() || "";
     const diff = doc.querySelector(".cmp-cur-weather .w-txt")?.textContent?.replace(/\s+/g, " ").trim() || "";
 
-    const airItems = doc.querySelectorAll(".cmp-cur-weather-air .air-wrap li");
-    const parseAir = (li: Element | undefined) => ({
-      val: li?.querySelector(".air-lvv")?.textContent?.trim() || "-",
-      level: li?.querySelector(".air-lvt")?.childNodes[0]?.textContent?.trim() || "",
-    });
     return {
       temp: tempText,
       chill,
       minmax,
       humidity,
       wind,
-      rain,
+      rain: "",
       updated,
       diff,
-      pm25: parseAir(airItems[0]),
-      pm10: parseAir(airItems[1]),
-      o3: parseAir(airItems[2]),
     };
   } catch (e) {
     console.error("parseCurrent failed", e);
@@ -83,7 +71,7 @@ const parseForecast = (html: string): DailyForecast[] => {
       const max = minmaxDivs[1]?.textContent?.trim() || "";
       const amPop = s.querySelector(".daily-pop-am span")?.textContent?.trim() || "-";
       const pmPop = s.querySelector(".daily-pop-pm span")?.textContent?.trim() || "-";
-      if (em === "오늘" || em === "내일") {
+      if (em === "오늘") {
         out.push({ label: em, dayLabel, amWeather, pmWeather, min, max, amPop, pmPop });
       }
     });
@@ -92,14 +80,6 @@ const parseForecast = (html: string): DailyForecast[] => {
     console.error("parseForecast failed", e);
     return [];
   }
-};
-
-const airColor = (level: string) => {
-  if (level.includes("좋음")) return "text-blue-600";
-  if (level.includes("보통")) return "text-green-600";
-  if (level.includes("나쁨") && !level.includes("매우")) return "text-orange-600";
-  if (level.includes("매우")) return "text-red-600";
-  return "text-muted-foreground";
 };
 
 export const WeatherBar = () => {
@@ -125,7 +105,7 @@ export const WeatherBar = () => {
 
   if (loading) {
     return (
-      <div className="mb-2 h-7 rounded-md bg-blue-50 border border-blue-100 px-2 flex items-center text-[11px] text-muted-foreground">
+      <div className="mb-2 h-6 rounded-md bg-blue-50 border border-blue-100 px-2 flex items-center text-[10px] text-muted-foreground">
         기상정보 불러오는 중...
       </div>
     );
@@ -133,43 +113,33 @@ export const WeatherBar = () => {
 
   if (!current) {
     return (
-      <div className="mb-2 h-7 rounded-md bg-red-50 border border-red-100 px-2 flex items-center text-[11px] text-red-600">
+      <div className="mb-2 h-6 rounded-md bg-red-50 border border-red-100 px-2 flex items-center text-[10px] text-red-600">
         기상정보를 불러올 수 없습니다
       </div>
     );
   }
 
   const items: React.ReactNode[] = [];
-  if (current.minmax) {
-    items.push(<span key="minmax" className="text-muted-foreground">{current.minmax}</span>);
+  if (current.humidity) {
+    items.push(
+      <span key="hum" className="inline-flex items-center gap-0.5">
+        <Droplets className="h-2.5 w-2.5 text-blue-500" />
+        {current.humidity}
+      </span>
+    );
   }
-  items.push(
-    <span key="hum" className="inline-flex items-center gap-1">
-      <Droplets className="h-3 w-3 text-blue-500" />습도 {current.humidity}
-    </span>
-  );
-  items.push(
-    <span key="wind" className="inline-flex items-center gap-1">
-      <Wind className="h-3 w-3 text-sky-500" />바람 {current.wind}
-    </span>
-  );
-  items.push(
-    <span key="pm25" className="inline-flex items-center gap-1">
-      <Cloud className="h-3 w-3 text-slate-500" />초미세 {current.pm25.val}
-      <span className={airColor(current.pm25.level) + " font-semibold"}>{current.pm25.level}</span>
-    </span>
-  );
-  items.push(
-    <span key="pm10" className="inline-flex items-center gap-1">
-      <Cloud className="h-3 w-3 text-slate-500" />미세 {current.pm10.val}
-      <span className={airColor(current.pm10.level) + " font-semibold"}>{current.pm10.level}</span>
-    </span>
-  );
+  if (current.wind) {
+    items.push(
+      <span key="wind" className="inline-flex items-center gap-0.5">
+        <Wind className="h-2.5 w-2.5 text-sky-500" />
+        {current.wind}
+      </span>
+    );
+  }
   forecast.forEach((f) => {
     items.push(
       <span key={f.label} className="inline-flex items-center gap-1">
-        <strong className="text-blue-700">{f.label}</strong>
-        <span className="text-muted-foreground">{f.dayLabel}</span>
+        <strong className="text-blue-700">오늘</strong>
         <span>오전 {f.amWeather}({f.amPop})</span>
         <span>오후 {f.pmWeather}({f.pmPop})</span>
         <span className="text-muted-foreground">{f.min}/{f.max}</span>
@@ -181,7 +151,7 @@ export const WeatherBar = () => {
   }
 
   const sep = (i: number) => (
-    <span key={`s${i}`} className="text-blue-300 px-1">|</span>
+    <span key={`s${i}`} className="text-blue-300 px-0.5">|</span>
   );
 
   const interleaved: React.ReactNode[] = [];
@@ -196,42 +166,38 @@ export const WeatherBar = () => {
     <div className="mb-2 rounded-md bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 overflow-hidden">
       <style>{`
         .weather-marquee {
-          animation: marquee 60s linear infinite;
+          animation: marquee 40s linear infinite;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
       `}</style>
-      <div className="relative h-7 flex items-center">
+      <div className="relative h-6 flex items-center text-[10px]">
         {/* 왼쪽 고정: 기온/체감 */}
-        <div className="flex-shrink-0 flex items-center gap-1.5 px-2 border-r border-blue-200 bg-blue-100/40 h-full text-[11px] ">
-          <Thermometer className="h-3 w-3 text-red-500 flex-shrink-0" />
+        <div className="flex-shrink-0 flex items-center gap-1 px-1.5 border-r border-blue-200 bg-blue-100/40 h-full">
+          <Thermometer className="h-2.5 w-2.5 text-red-500 flex-shrink-0" />
           <strong className="text-foreground whitespace-nowrap">{current.temp}℃</strong>
           {chillText && (
-            <span className="text-muted-foreground whitespace-nowrap">체감 {chillText}℃</span>
+            <span className="whitespace-nowrap">
+              <span className="text-[9px] text-blue-500">체감</span>
+              <span className="text-blue-700 font-semibold">{chillText}℃</span>
+            </span>
           )}
         </div>
         {/* 오른쪽 마퀴 */}
-<div className="flex-1 overflow-hidden">
-  {/* 💡 핵심 1: w-max 추가로 글자 길이에 맞춰 컨테이너 너비 확장 */}
-  <div className="weather-marquee w-max flex items-center text-[11px]">
-    
-    {/* 💡 핵심 2: 두 세트를 각각 동일한 div로 묶어 오차를 없앰 */}
-    {/* 1번 세트 */}
-    <div className="flex items-center gap-2 px-2">
-      {interleaved}
-      <span className="text-blue-300 px-1">|</span>
-    </div>
-
-    {/* 2번 세트 (1번 세트와 완벽히 동일한 구조) */}
-    <div className="flex items-center gap-2 px-2">
-      {interleaved}
-      <span className="text-blue-300 px-1">|</span>
-    </div>
-
-  </div>
-</div>
+        <div className="flex-1 overflow-hidden">
+          <div className="weather-marquee w-max flex items-center">
+            <div className="flex items-center gap-2 px-1.5">
+              {interleaved}
+              <span className="text-blue-300 px-0.5">|</span>
+            </div>
+            <div className="flex items-center gap-2 px-1.5">
+              {interleaved}
+              <span className="text-blue-300 px-0.5">|</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
